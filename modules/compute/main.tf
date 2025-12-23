@@ -1,9 +1,3 @@
-# modules/compute/main.tf
-# Compute instances module - Public and Private VMs
-
-# ============================================
-# SERVICE ACCOUNT FOR VMs
-# ============================================
 
 resource "google_service_account" "vm_service_account" {
   account_id   = "${var.project_prefix}-vm-sa"
@@ -11,9 +5,7 @@ resource "google_service_account" "vm_service_account" {
   description  = "Service account used by compute instances"
 }
 
-# ============================================
-# PUBLIC VM (Internet-Facing with NGINX)
-# ============================================
+
 
 resource "google_compute_instance" "public_vm" {
   name         = "${var.project_prefix}-public-vm"
@@ -30,25 +22,25 @@ resource "google_compute_instance" "public_vm" {
     }
   }
   
-  # Network interface in public subnet WITH external IP
+  
   network_interface {
     subnetwork = var.public_subnet_self_link
     
-    # This creates an external IP address
+    
     access_config {
-      # Ephemeral external IP (you can specify static IP here if needed)
+      
       network_tier = "PREMIUM"
     }
   }
   
-  # SSH key metadata
+  
   metadata = {
     ssh-keys               = "${var.ssh_username}:${var.ssh_public_key}"
     enable-oslogin         = "FALSE"
     block-project-ssh-keys = "FALSE"
   }
   
-  # Startup script to install and configure NGINX
+  
   metadata_startup_script = <<-EOF
     #!/bin/bash
     set -e
@@ -194,9 +186,7 @@ resource "google_compute_instance" "public_vm" {
   allow_stopping_for_update = true
 }
 
-# ============================================
-# PRIVATE VM (Internal, No External IP)
-# ============================================
+
 
 resource "google_compute_instance" "private_vm" {
   name         = "${var.project_prefix}-private-vm"
@@ -213,20 +203,20 @@ resource "google_compute_instance" "private_vm" {
     }
   }
   
-  # Network interface in private subnet WITHOUT external IP
+  
   network_interface {
     subnetwork = var.private_subnet_self_link
-    # NO access_config block = NO external IP
+    
   }
   
-  # SSH key metadata
+
   metadata = {
     ssh-keys               = "${var.ssh_username}:${var.ssh_public_key}"
     enable-oslogin         = "FALSE"
     block-project-ssh-keys = "FALSE"
   }
   
-  # Startup script for private VM
+  
   metadata_startup_script = <<-EOF
     #!/bin/bash
     set -e

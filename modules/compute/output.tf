@@ -1,9 +1,3 @@
-# modules/compute/outputs.tf
-# Outputs from compute module
-
-# ============================================
-# PUBLIC VM OUTPUTS
-# ============================================
 
 output "public_vm_id" {
   description = "ID of the public VM"
@@ -35,9 +29,7 @@ output "public_vm_self_link" {
   value       = google_compute_instance.public_vm.self_link
 }
 
-# ============================================
-# PRIVATE VM OUTPUTS
-# ============================================
+
 
 output "private_vm_id" {
   description = "ID of the private VM"
@@ -64,9 +56,7 @@ output "private_vm_self_link" {
   value       = google_compute_instance.private_vm.self_link
 }
 
-# ============================================
-# SERVICE ACCOUNT OUTPUT
-# ============================================
+
 
 output "vm_service_account_email" {
   description = "Email of the service account used by VMs"
@@ -78,9 +68,6 @@ output "vm_service_account_id" {
   value       = google_service_account.vm_service_account.id
 }
 
-# ============================================
-# NGINX ACCESS OUTPUT
-# ============================================
 
 output "nginx_url" {
   description = "URL to access NGINX on public VM"

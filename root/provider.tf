@@ -18,14 +18,14 @@ terraform {
     }
   }
   
-  # Backend configuration for storing state in GCS
+  
   backend "gcs" {
-    bucket = "YOUR_BUCKET_NAME"  # Will be replaced by GitHub Actions
+    bucket = "YOUR_BUCKET_NAME"  
     prefix = "terraform/state"
   }
 }
 
-# Google Cloud Provider
+
 provider "google" {
   project = var.project_id
   region  = var.region

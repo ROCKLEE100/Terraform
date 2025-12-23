@@ -1,9 +1,3 @@
-# root/outputs.tf
-# Root module outputs (aggregates outputs from all child modules)
-
-# ============================================
-# NETWORKING OUTPUTS
-# ============================================
 
 output "vpc_name" {
   description = "Name of the VPC network"
@@ -35,9 +29,7 @@ output "private_subnet_cidr" {
   value       = module.networking.private_subnet_cidr
 }
 
-# ============================================
-# SSH KEY OUTPUTS
-# ============================================
+
 
 output "ssh_private_key_secret_path" {
   description = "Path to SSH private key in Secret Manager"
@@ -49,9 +41,7 @@ output "ssh_public_key_secret_path" {
   value       = module.ssh_key.public_key_secret_name
 }
 
-# ============================================
-# PUBLIC VM OUTPUTS
-# ============================================
+
 
 output "public_vm_name" {
   description = "Name of the public VM"
@@ -73,9 +63,7 @@ output "public_vm_zone" {
   value       = module.compute.public_vm_zone
 }
 
-# ============================================
-# PRIVATE VM OUTPUTS
-# ============================================
+
 
 output "private_vm_name" {
   description = "Name of the private VM"
@@ -92,18 +80,13 @@ output "private_vm_zone" {
   value       = module.compute.private_vm_zone
 }
 
-# ============================================
-# APPLICATION ACCESS
-# ============================================
+
 
 output "nginx_url" {
   description = "URL to access NGINX on public VM"
   value       = module.compute.nginx_url
 }
 
-# ============================================
-# SSH COMMANDS
-# ============================================
 
 output "ssh_to_public_vm_command" {
   description = "Command to SSH into public VM"
@@ -115,18 +98,14 @@ output "ssh_to_private_vm_command" {
   value       = "gcloud compute ssh ${module.compute.private_vm_name} --zone=${module.compute.private_vm_zone} --project=${var.project_id} --tunnel-through-iap"
 }
 
-# ============================================
-# SERVICE ACCOUNT
-# ============================================
+
 
 output "vm_service_account_email" {
   description = "Service account email used by VMs"
   value       = module.compute.vm_service_account_email
 }
 
-# ============================================
-# COMPLETE DEPLOYMENT SUMMARY
-# ============================================
+
 
 output "deployment_summary" {
   description = "Complete deployment summary"

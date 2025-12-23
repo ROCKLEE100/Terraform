@@ -1,9 +1,3 @@
-# root/variables.tf
-# Root module variables
-
-# ============================================
-# PROJECT CONFIGURATION
-# ============================================
 
 variable "project_id" {
   description = "GCP Project ID"
@@ -42,9 +36,6 @@ variable "environment" {
   default     = "assignment"
 }
 
-# ============================================
-# NETWORKING CONFIGURATION
-# ============================================
 
 variable "public_subnet_cidr" {
   description = "CIDR block for public subnet"
@@ -66,9 +57,6 @@ variable "private_subnet_cidr" {
   }
 }
 
-# ============================================
-# COMPUTE CONFIGURATION
-# ============================================
 
 variable "machine_type" {
   description = "Machine type for compute instances"
@@ -102,9 +90,7 @@ variable "boot_disk_type" {
   }
 }
 
-# ============================================
-# SSH CONFIGURATION
-# ============================================
+
 
 variable "ssh_username" {
   description = "SSH username for VM access"

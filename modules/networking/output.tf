@@ -1,5 +1,4 @@
-# modules/networking/outputs.tf
-# Outputs from networking module
+
 
 output "vpc_id" {
   description = "ID of the VPC network"

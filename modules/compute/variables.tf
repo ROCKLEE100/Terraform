@@ -1,5 +1,3 @@
-# modules/compute/variables.tf
-# Variables for compute module
 
 variable "project_prefix" {
   description = "Prefix for resource naming"

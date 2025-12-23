@@ -1,9 +1,4 @@
-# modules/networking/main.tf
-# Networking module - VPC, Subnets, NAT, Firewalls
 
-# ============================================
-# CUSTOM VPC NETWORK
-# ============================================
 
 resource "google_compute_network" "custom_vpc" {
   name                    = "${var.project_prefix}-vpc"
@@ -12,11 +7,7 @@ resource "google_compute_network" "custom_vpc" {
   description             = "Custom VPC for ${var.environment} environment"
 }
 
-# ============================================
-# SUBNETS
-# ============================================
 
-# Public subnet - for internet-facing resources
 resource "google_compute_subnetwork" "public_subnet" {
   name          = "${var.project_prefix}-public-subnet"
   ip_cidr_range = var.public_subnet_cidr
@@ -31,7 +22,7 @@ resource "google_compute_subnetwork" "public_subnet" {
   }
 }
 
-# Private subnet - for internal resources
+
 resource "google_compute_subnetwork" "private_subnet" {
   name          = "${var.project_prefix}-private-subnet"
   ip_cidr_range = var.private_subnet_cidr
@@ -46,11 +37,7 @@ resource "google_compute_subnetwork" "private_subnet" {
   }
 }
 
-# ============================================
-# CLOUD NAT (for private subnet internet access)
-# ============================================
 
-# Cloud Router required for NAT
 resource "google_compute_router" "nat_router" {
   name    = "${var.project_prefix}-nat-router"
   region  = var.region
@@ -61,7 +48,7 @@ resource "google_compute_router" "nat_router" {
   }
 }
 
-# Cloud NAT gateway
+
 resource "google_compute_router_nat" "nat_gateway" {
   name                               = "${var.project_prefix}-nat-gateway"
   router                             = google_compute_router.nat_router.name
@@ -80,11 +67,7 @@ resource "google_compute_router_nat" "nat_gateway" {
   }
 }
 
-# ============================================
-# FIREWALL RULES
-# ============================================
 
-# Allow HTTP and HTTPS to public VMs
 resource "google_compute_firewall" "allow_http_https" {
   name    = "${var.project_prefix}-allow-http-https"
   network = google_compute_network.custom_vpc.name
@@ -100,7 +83,6 @@ resource "google_compute_firewall" "allow_http_https" {
   description = "Allow HTTP and HTTPS traffic from internet to public VMs"
 }
 
-# Allow SSH from IAP (Identity-Aware Proxy)
 resource "google_compute_firewall" "allow_ssh_iap" {
   name    = "${var.project_prefix}-allow-ssh-iap"
   network = google_compute_network.custom_vpc.name
@@ -110,14 +92,14 @@ resource "google_compute_firewall" "allow_ssh_iap" {
     ports    = ["22"]
   }
   
-  # Google's IAP IP range
+  
   source_ranges = ["35.235.240.0/20"]
   target_tags   = ["public-vm", "private-vm", "ssh-enabled"]
   
   description = "Allow SSH from Identity-Aware Proxy"
 }
 
-# Allow internal communication between all resources
+
 resource "google_compute_firewall" "allow_internal" {
   name    = "${var.project_prefix}-allow-internal"
   network = google_compute_network.custom_vpc.name
@@ -144,7 +126,7 @@ resource "google_compute_firewall" "allow_internal" {
   description = "Allow all internal traffic within VPC"
 }
 
-# Allow health checks from Google Cloud
+
 resource "google_compute_firewall" "allow_health_checks" {
   name    = "${var.project_prefix}-allow-health-checks"
   network = google_compute_network.custom_vpc.name

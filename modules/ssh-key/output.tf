@@ -1,5 +1,3 @@
-# modules/ssh-key/outputs.tf
-# Outputs from SSH key module
 
 output "public_key_openssh" {
   description = "SSH public key in OpenSSH format"
