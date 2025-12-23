@@ -1,0 +1,21 @@
+# root/terraform.tfvars.example
+# Example variable values - Copy this to terraform.tfvars and update with your values
+
+project_id          = "your-gcp-project-id"
+region              = "us-central1"
+zone                = "us-central1-a"
+project_prefix      = "assignment"
+environment         = "assignment"
+
+# Networking Configuration
+public_subnet_cidr  = "10.0.1.0/24"
+private_subnet_cidr = "10.0.2.0/24"
+
+# Compute Configuration
+machine_type        = "e2-micro"        # Free tier eligible
+vm_image            = "debian-cloud/debian-11"
+boot_disk_size      = 20                # GB
+boot_disk_type      = "pd-standard"     # Options: pd-standard, pd-ssd, pd-balanced
+
+# SSH Configuration
+ssh_username        = "gcpuser"
