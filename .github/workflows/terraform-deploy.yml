@@ -1,4 +1,3 @@
-
 name: Terraform GCP Deployment
 
 on:
@@ -6,24 +5,24 @@ on:
     branches:
       - main
     paths:
-      - 'modules/**'
-      - 'root/**'
-      - '.github/workflows/terraform-deploy.yml'
+      - "modules/**"
+      - "root/**"
+      - ".github/workflows/terraform-deploy.yml"
   pull_request:
     branches:
       - main
   workflow_dispatch:
 
 env:
-  TF_VERSION: '1.6.0'
-  GCP_REGION: 'us-central1'
-  WORKING_DIR: './root'
+  TF_VERSION: "1.6.0"
+  GCP_REGION: "us-central1"
+  WORKING_DIR: "./root"
 
 jobs:
   terraform:
-    name: 'Terraform Plan & Apply'
+    name: "Terraform Plan & Apply"
     runs-on: ubuntu-latest
-    
+
     permissions:
       contents: read
       id-token: write
@@ -100,17 +99,17 @@ jobs:
             const fs = require('fs');
             const plan = fs.readFileSync('${{ env.WORKING_DIR }}/plan_output.txt', 'utf8');
             const output = `#### Terraform Plan 📖
-            
+
             <details><summary>Show Plan</summary>
-            
+
             \`\`\`terraform
             ${plan.substring(0, 65000)}
             \`\`\`
-            
+
             </details>
-            
+
             **Working Directory**: \`${{ env.WORKING_DIR }}\``;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -139,47 +138,47 @@ jobs:
         run: |
           cat >> $GITHUB_STEP_SUMMARY <<EOF
           ## 🚀 Deployment Successful!
-          
+
           ### 📊 Infrastructure Created
-          
+
           #### 🌐 Networking
           - **VPC**: Custom VPC with public and private subnets
           - **Public Subnet**: 10.0.1.0/24
           - **Private Subnet**: 10.0.2.0/24
           - **Cloud NAT**: Configured for private subnet
-          
+
           #### 💻 Virtual Machines
-          
+
           **Public VM** (Internet-Facing)
           - **Name**: ${{ steps.output.outputs.PUBLIC_VM }}
           - **External IP**: ${{ steps.output.outputs.PUBLIC_IP }}
           - **NGINX URL**: [${{ steps.output.outputs.NGINX_URL }}](${{ steps.output.outputs.NGINX_URL }})
           - **Access**: Direct from internet via HTTP
-          
+
           **Private VM** (Internal Only)
           - **Name**: ${{ steps.output.outputs.PRIVATE_VM }}
           - **External IP**: None (isolated)
           - **Access**: Via IAP tunnel only
-          
+
           ### 🔗 Quick Access
-          
+
           1. **Access NGINX Web Server**:
              \`\`\`
              ${{ steps.output.outputs.NGINX_URL }}
              \`\`\`
-          
+
           2. **SSH to Public VM**:
              \`\`\`bash
              gcloud compute ssh ${{ steps.output.outputs.PUBLIC_VM }} --zone=us-central1-a --project=${{ secrets.GCP_PROJECT_ID }}
              \`\`\`
-          
+
           3. **SSH to Private VM** (requires IAP):
              \`\`\`bash
              gcloud compute ssh ${{ steps.output.outputs.PRIVATE_VM }} --zone=us-central1-a --project=${{ secrets.GCP_PROJECT_ID }} --tunnel-through-iap
              \`\`\`
-          
+
           ### 📝 Architecture
-          
+
           \`\`\`
           Internet → Public VM (NGINX) ←→ Private VM
                      (10.0.1.x)              (10.0.2.x)
@@ -187,25 +186,25 @@ jobs:
                                               ↓
                                           Cloud NAT
           \`\`\`
-          
+
           ### 🔐 Security
           - SSH keys stored in Secret Manager
           - Private VM has no external IP
           - IAP tunneling for secure SSH access
           - Cloud NAT for private subnet internet (outbound only)
-          
+
           ---
-          
+
           **Deployed at**: $(date)
           EOF
 
   destroy:
-    name: 'Terraform Destroy (Manual)'
+    name: "Terraform Destroy (Manual)"
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch'
-    environment: 
+    environment:
       name: destroy-approval
-    
+
     permissions:
       contents: read
       id-token: write
@@ -245,3 +244,4 @@ jobs:
       - name: Terraform Destroy
         working-directory: ${{ env.WORKING_DIR }}
         run: terraform destroy -auto-approve
+#This for testing purpose
